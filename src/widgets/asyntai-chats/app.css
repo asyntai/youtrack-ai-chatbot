@@ -1,0 +1,123 @@
+.widget {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--ring-unit) * 1.5);
+  margin: calc(var(--ring-unit) / 2);
+}
+
+.asyntai-actions {
+  display: flex;
+  gap: var(--ring-unit);
+  align-items: center;
+}
+
+/* The drafted reply. Boxed, because an agent must see where our text stops
+   and their own writing starts. */
+.asyntai-draft {
+  border: 1px solid var(--ring-line-color);
+  border-radius: var(--ring-border-radius);
+  background: var(--ring-sidebar-background-color);
+}
+
+.asyntai-draft-head {
+  padding: var(--ring-unit) calc(var(--ring-unit) * 1.5);
+  border-bottom: 1px solid var(--ring-line-color);
+  font-weight: bold;
+  font-size: var(--ring-font-size-smaller);
+  color: var(--ring-secondary-color);
+}
+
+.asyntai-draft-body {
+  padding: calc(var(--ring-unit) * 1.5);
+  white-space: pre-wrap;
+  line-height: 1.6;
+}
+
+.asyntai-draft-foot {
+  padding: 0 calc(var(--ring-unit) * 1.5) calc(var(--ring-unit) * 1.5);
+  font-size: var(--ring-font-size-smaller);
+  color: var(--ring-secondary-color);
+}
+
+.asyntai-head {
+  font-size: var(--ring-font-size-smaller);
+  color: var(--ring-secondary-color);
+}
+
+.asyntai-chat {
+  border: 1px solid var(--ring-line-color);
+  border-radius: var(--ring-border-radius);
+  overflow: hidden;
+}
+
+/* A button, not a div, so the row is reachable by keyboard. */
+.asyntai-chat-head {
+  display: flex;
+  gap: var(--ring-unit);
+  align-items: baseline;
+  width: 100%;
+  padding: var(--ring-unit) calc(var(--ring-unit) * 1.5);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+}
+
+.asyntai-chat-head:hover {
+  background: var(--ring-hover-background-color);
+}
+
+.asyntai-chat-when {
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+/* The page can be a long URL; it gives way before the other two columns. */
+.asyntai-chat-where {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--ring-secondary-color);
+  font-size: var(--ring-font-size-smaller);
+}
+
+.asyntai-chat-count {
+  white-space: nowrap;
+  color: var(--ring-secondary-color);
+  font-size: var(--ring-font-size-smaller);
+}
+
+.asyntai-messages {
+  border-top: 1px solid var(--ring-line-color);
+  padding: var(--ring-unit) calc(var(--ring-unit) * 1.5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--ring-unit);
+}
+
+.asyntai-msg {
+  display: flex;
+  gap: var(--ring-unit);
+  align-items: baseline;
+}
+
+.asyntai-who {
+  flex: 0 0 auto;
+  min-width: 56px;
+  font-size: var(--ring-font-size-smaller);
+  color: var(--ring-secondary-color);
+}
+
+.asyntai-msg.visitor .asyntai-who {
+  color: var(--ring-main-color);
+}
+
+/* Whole messages, never cut: the agent is reading this to learn what the
+   visitor already asked. */
+.asyntai-text {
+  white-space: pre-wrap;
+  line-height: 1.5;
+}
