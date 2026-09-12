@@ -8,7 +8,7 @@
     "build": "tsc -p tsconfig.app.json && vite build && youtrack-app app validate",
     "lint": "eslint --report-unused-disable-directives --max-warnings 0",
     "test": "echo 'no tests'",
-    "pack": "bestzip asyntai-ai-chatbot.zip ./dist/*",
+    "pack": "cd dist && bestzip ../asyntai-ai-chatbot.zip *",
     "upload": "youtrack-app app upload"
   },
   "dependencies": {
