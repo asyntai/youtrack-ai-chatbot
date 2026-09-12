@@ -3,6 +3,8 @@ import Button from '@jetbrains/ring-ui-built/components/button/button';
 import Loader from '@jetbrains/ring-ui-built/components/loader/loader';
 import Text from '@jetbrains/ring-ui-built/components/text/text';
 
+import Markdown from './markdown';
+
 const host = await YTApp.register();
 
 interface Message {
@@ -46,18 +48,31 @@ function messageKey(sessionId: string, message: Message, index: number): string 
   return [sessionId, index, message.role, message.timestamp ?? '', message.content.slice(0, KEY_TEXT_CHARS)].join('|');
 }
 
+/**
+ * The YouTrack user's language, which YouTrack passes to the widget frame as
+ * "#locale=xx". The browser's own language is not the same thing: an English
+ * YouTrack in a Czech browser must still print English dates.
+ */
+function uiLocale(): string | undefined {
+  const locale = new URLSearchParams(window.location.hash.replace(/^#/, '')).get('locale');
+  return locale || undefined;
+}
+
 function formatDate(value: string): string {
   if (!value) {
     return '';
   }
   const parsed = new Date(value);
-  return isNaN(parsed.getTime()) ? '' : parsed.toLocaleString();
+  if (isNaN(parsed.getTime())) {
+    return '';
+  }
+  return parsed.toLocaleString(uiLocale(), {dateStyle: 'medium', timeStyle: 'short'});
 }
 
 const DraftPanel: React.FunctionComponent<{draft: string}> = ({draft}) => (
   <div className="asyntai-draft">
     <div className="asyntai-draft-head">{'Suggested reply'}</div>
-    <div className="asyntai-draft-body">{draft}</div>
+    <div className="asyntai-draft-body"><Markdown text={draft}/></div>
     <div className="asyntai-draft-foot">
       {'Read it before you send it. Your AI agent wrote it from your website and your knowledge base.'}
     </div>
@@ -85,7 +100,7 @@ const ChatRow: React.FunctionComponent<{
             <span className="asyntai-who">
               {message.role === 'user' ? 'Visitor' : 'Asyntai'}
             </span>
-            <span className="asyntai-text">{message.content}</span>
+            <span className="asyntai-text"><Markdown text={message.content}/></span>
           </div>
         ))}
       </div>

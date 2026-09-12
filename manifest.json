@@ -1,10 +1,10 @@
 {
   "name": "asyntai-ai-chatbot",
   "title": "Asyntai AI Chatbot",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Your Asyntai AI chat agent answers website visitors. When it opens a support ticket, that ticket appears in your YouTrack helpdesk with the whole conversation.",
   "url": "https://asyntai.com/documentation/integrations/youtrack/",
-  "changeNotes": "First release: a reply drafted by your Asyntai AI agent on every ticket, and the earlier website chats of the reporter.",
+  "changeNotes": "1.0.1: replies and chat messages render their formatting (bold, lists, links); dates follow the YouTrack language. 1.0.0: a reply drafted by your Asyntai AI agent on every ticket, and the earlier website chats of the reporter.",
   "$schema": "https://json.schemastore.org/youtrack-app.json",
   "vendor": {
     "name": "Asyntai",

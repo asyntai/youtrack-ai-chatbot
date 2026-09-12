@@ -29,8 +29,21 @@
 
 .asyntai-draft-body {
   padding: calc(var(--ring-unit) * 1.5);
-  white-space: pre-wrap;
   line-height: 1.6;
+}
+
+/* Rendered Markdown: paragraphs and lists keep the spacing of the chat. */
+.asyntai-md-p {
+  margin: 0 0 var(--ring-unit);
+}
+
+.asyntai-md-p:last-child {
+  margin-bottom: 0;
+}
+
+.asyntai-md-list {
+  margin: 0 0 var(--ring-unit);
+  padding-left: calc(var(--ring-unit) * 2.5);
 }
 
 .asyntai-draft-foot {
