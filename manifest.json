@@ -10,7 +10,7 @@
     "name": "Asyntai",
     "url": "https://asyntai.com"
   },
-  "icon": "icon.png",
+  "icon": "icon.svg",
   "widgets": [
     {
       "key": "asyntai-chats",
