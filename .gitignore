@@ -25,3 +25,4 @@ dist-ssr
 
 # Build artefacts
 *.zip
+media/*.txt
