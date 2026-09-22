@@ -1,0 +1,14 @@
+Hello Stanislav,
+
+Thank you for the review. We have applied all three points:
+
+1. Icon: the app now ships an SVG icon (icon.svg in the new build).
+
+2. Screenshots: we replaced the images with screenshots of the app inside a YouTrack ticket. There is no promo text on them. The description carries that text now.
+
+3. Test account: we set up an Asyntai account for your engineer with a plan that includes API access. Login: review2@asyntai.com, password: [PASSWORD]. The API key is on the Account page in Asyntai (Account, then API keys). Paste it into the app settings in YouTrack (Administration, then Apps, then Asyntai AI Chatbot, then Settings). If Andrey prefers his own account, we can upgrade an account under andrey.skladchikov@jetbrains.com instead. Just let us know.
+
+The new build (1.0.1) is uploaded to the listing.
+
+Kind regards,
+Asyntai team

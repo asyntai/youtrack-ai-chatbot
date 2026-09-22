@@ -1,0 +1,18 @@
+{
+  "entityTypeExtensions": [
+    {
+      "entityType": "Issue",
+      "properties": {
+        "asyntaiChatsState": {"type": "string"},
+        "asyntaiChats": {"type": "string"},
+        "asyntaiChatsEmail": {"type": "string"},
+        "asyntaiChatsError": {"type": "string"},
+        "asyntaiChatsAt": {"type": "integer"},
+        "asyntaiDraftState": {"type": "string"},
+        "asyntaiDraft": {"type": "string"},
+        "asyntaiDraftError": {"type": "string"},
+        "asyntaiDraftAt": {"type": "integer"}
+      }
+    }
+  ]
+}

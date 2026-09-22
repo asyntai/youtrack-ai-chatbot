@@ -33,7 +33,7 @@ npx youtrack-app app upload --directory dist
 
 ## Requirements
 
-- YouTrack 2026.1 or later, cloud or server
+- YouTrack 2026.2 or later, cloud or server
 - An Asyntai account on the Starter plan or higher
 
 ## License

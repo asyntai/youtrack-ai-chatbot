@@ -23,14 +23,51 @@ interface Chat {
 interface ChatsResult {
   email?: string;
   chats?: Chat[];
+  state?: string;
+  fresh?: boolean;
   error?: string;
   message?: string;
 }
 
 interface DraftResult {
   draft?: string;
+  state?: string;
   error?: string;
   message?: string;
+}
+
+// The backend hands every Asyntai call to YouTrack to run after the request
+// returns, and stores the result on the issue. The widget asks again until the
+// state is "ready" or "error".
+const POLL_MS = 1500;
+const POLL_LIMIT_MS = 90000;
+const DONE_STATES = ['ready', 'error'];
+
+function sleep(ms: number): Promise<void> {
+  return new Promise(resolve => {
+    setTimeout(resolve, ms);
+  });
+}
+
+/**
+ * Starts a job with POST, then reads GET until the job is done.
+ *
+ * The POST answer is enough when the backend already holds a fresh result
+ * or a finished one, so the loop only runs while the state is pending.
+ */
+async function pollJob<T extends {state?: string; fresh?: boolean}>(
+  path: string, isCancelled: () => boolean
+): Promise<T> {
+  let data = await host.fetchApp<T>(path, {method: 'POST', scope: true, body: {}});
+  const started = Date.now();
+  while (!isCancelled() && !data.fresh && !DONE_STATES.includes(data.state ?? '')) {
+    if (Date.now() - started > POLL_LIMIT_MS) {
+      return {...data, state: 'error', error: 'Asyntai did not answer in time.'};
+    }
+    await sleep(POLL_MS);
+    data = await host.fetchApp<T>(path, {scope: true});
+  }
+  return data;
 }
 
 // Enough of the text to tell two messages apart without holding the whole
@@ -146,8 +183,10 @@ function useChats() {
       setResult(data);
       setLoading(false);
     };
-    host.fetchApp<ChatsResult>('backend/chats', {scope: true})
-      .then(settle)
+    pollJob<ChatsResult>('backend/chats', () => cancelled)
+      .then(data => settle(data.state === 'error'
+        ? {...data, message: data.error || 'Could not read the chats.'}
+        : data))
       .catch(() => settle({error: 'unreachable', message: 'Could not read the chats.'}));
     return () => {
       cancelled = true;
@@ -155,6 +194,10 @@ function useChats() {
   }, []);
 
   return {loading, result};
+}
+
+function draftProblem(data: DraftResult): string {
+  return data.error || data.message || 'Asyntai did not write a draft.';
 }
 
 /** Asks the Asyntai agent for a reply to this ticket, on demand. */
@@ -168,11 +211,9 @@ function useDraft() {
     setDraftError('');
     setDraft('');
     try {
-      const data = await host.fetchApp<DraftResult>('backend/draft', {
-        method: 'POST', scope: true, body: {}
-      });
+      const data = await pollJob<DraftResult>('backend/draft', () => false);
       setDraft(data.draft ?? '');
-      setDraftError(data.draft ? '' : (data.message ?? 'Asyntai did not write a draft.'));
+      setDraftError(data.draft ? '' : draftProblem(data));
     } catch {
       setDraftError('Asyntai did not answer.');
     }
@@ -216,6 +257,17 @@ const Loaded: React.FunctionComponent<{result: ChatsResult}> = ({result}) => {
   );
 };
 
+/** The sentence to show instead of the chats, or '' when all is well. */
+function chatsProblem(result: ChatsResult | null): string {
+  if (!result) {
+    return 'Asyntai did not answer.';
+  }
+  if (result.error || result.state === 'error') {
+    return result.message || result.error || 'Asyntai did not answer.';
+  }
+  return '';
+}
+
 const AppComponent: React.FunctionComponent = () => {
   const {loading, result} = useChats();
 
@@ -223,10 +275,10 @@ const AppComponent: React.FunctionComponent = () => {
     return <div className="widget"><Loader message="Reading Asyntai..."/></div>;
   }
 
-  if (!result || result.error) {
+  if (!result || chatsProblem(result)) {
     return (
       <div className="widget">
-        <Text info>{result?.message ?? 'Asyntai did not answer.'}</Text>
+        <Text info>{chatsProblem(result)}</Text>
       </div>
     );
   }
